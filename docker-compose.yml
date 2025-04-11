@@ -1,0 +1,48 @@
+# Versi penulisan Docker Compose
+version: "3.7"
+
+services:
+  # Container service aplikasi (item-app)
+  item-app:
+    # Menggunakan image (item-app) dari Github Container Registry
+    image: ghcr.io/maoelana/a433-microservices/item-app:v1
+
+    # Perintah menginstal semua dependensi yang diperlukan aplikasi dalam mode produksi
+    # Setelah itu, build aplikasi lalu dijalankan 
+    command: sh -c "npm install --production --unsafe-perm && npm run build && npm start"
+
+    # Mapping port host (80) dengan port container (8080)
+    ports:
+      - 80:8080
+
+    # Menetapkan folder /app sebagai folder kerja
+    working_dir: /app
+
+    # Bind mount dari folder ./ di host ke folder /app di container
+    volumes:
+      - ./:/app
+
+    # Environment variable untuk aplikasi
+    # NODE_ENV diatur ke 'production' untuk menjalankan aplikasi dalam mode produksi
+    # DB_HOST diatur ke 'item-db' sebagai lokasi database
+    environment:
+      NODE_ENV: production
+      DB_HOST: item-db
+
+    # Menunggu container database (item-db) siap terlebih dahulu
+    # Setelah itu container item-app dijalankan
+    depends_on:
+      - item-db 
+
+  # Container service database MongoDB (item-db)
+  item-db:
+    # Menggunakan image (mongo versi 3) dari Docker Hub
+    image: mongo:3
+
+    # Mapping volume app-db ke /data/db untuk menyimpan data
+    volumes:
+      - app-db:/data/db
+
+# Mendeklarasikan volume app-db
+volumes:
+  app-db:
