@@ -1,0 +1,61 @@
+item-app-1  | 
+item-app-1  | > docker-software-delivery@1.0.0 preinstall /app
+item-app-1  | > npx npm-force-resolutions
+item-app-1  | 
+item-app-1  | npx: installed 6 in 6.677s
+item-app-1  | audited 660 packages in 26.511s
+item-app-1  | 
+item-app-1  | 9 packages are looking for funding
+item-app-1  |   run `npm fund` for details
+item-app-1  | 
+item-app-1  | found 126 vulnerabilities (21 low, 35 moderate, 59 high, 11 critical)
+item-app-1  |   run `npm audit fix` to fix them, or `npm audit` for details
+item-app-1  | 
+item-app-1  | > docker-software-delivery@1.0.0 build /app
+item-app-1  | > node ./node_modules/gulp/bin/gulp.js
+item-app-1  | 
+item-app-1  | [17:11:05] Using gulpfile /app/gulpfile.js
+item-app-1  | [17:11:05] Starting 'scripts'...
+item-app-1  | [17:11:22] Finished 'scripts' after 17 s
+item-app-1  | [17:11:22] Starting 'default'...
+item-app-1  | [17:11:22] Finished 'default' after 173 μs
+item-app-1  | 
+item-app-1  | > docker-software-delivery@1.0.0 start /app
+item-app-1  | > node ./bin/www
+item-app-1  | 
+item-app-1  | NODE_ENV: production
+item-app-1  | Connected to database
+item-db-1   | 2025-04-11T17:10:27.769+0000 I CONTROL  [initandlisten] MongoDB starting : pid=1 port=27017 dbpath=/data/db 64-bit host=5b9e336cd524
+item-db-1   | 2025-04-11T17:10:27.770+0000 I CONTROL  [initandlisten] db version v3.6.23
+item-db-1   | 2025-04-11T17:10:27.770+0000 I CONTROL  [initandlisten] git version: d352e6a4764659e0d0350ce77279de3c1f243e5c
+item-db-1   | 2025-04-11T17:10:27.770+0000 I CONTROL  [initandlisten] OpenSSL version: OpenSSL 1.0.2g  1 Mar 2016
+item-db-1   | 2025-04-11T17:10:27.770+0000 I CONTROL  [initandlisten] allocator: tcmalloc
+item-db-1   | 2025-04-11T17:10:27.770+0000 I CONTROL  [initandlisten] modules: none
+item-db-1   | 2025-04-11T17:10:27.770+0000 I CONTROL  [initandlisten] build environment:
+item-db-1   | 2025-04-11T17:10:27.770+0000 I CONTROL  [initandlisten]     distmod: ubuntu1604
+item-db-1   | 2025-04-11T17:10:27.770+0000 I CONTROL  [initandlisten]     distarch: x86_64
+item-db-1   | 2025-04-11T17:10:27.770+0000 I CONTROL  [initandlisten]     target_arch: x86_64
+item-db-1   | 2025-04-11T17:10:27.770+0000 I CONTROL  [initandlisten] options: { net: { bindIpAll: true } }
+item-db-1   | 2025-04-11T17:10:27.786+0000 I -        [initandlisten] Detected data files in /data/db created by the 'wiredTiger' storage engine, so setting the active storage engine to 'wiredTiger'.
+item-db-1   | 2025-04-11T17:10:27.787+0000 I STORAGE  [initandlisten] 
+item-db-1   | 2025-04-11T17:10:27.787+0000 I STORAGE  [initandlisten] ** WARNING: Using the XFS filesystem is strongly recommended with the WiredTiger storage engine
+item-db-1   | 2025-04-11T17:10:27.787+0000 I STORAGE  [initandlisten] **          See http://dochub.mongodb.org/core/prodnotes-filesystem
+item-db-1   | 2025-04-11T17:10:27.787+0000 I STORAGE  [initandlisten] wiredtiger_open config: create,cache_size=344M,cache_overflow=(file_max=0M),session_max=20000,eviction=(threads_min=4,threads_max=4),config_base=false,statistics=(fast),compatibility=(release="3.0",require_max="3.0"),log=(enabled=true,archive=true,path=journal,compressor=snappy),file_manager=(close_idle_time=100000),statistics_log=(wait=0),verbose=(recovery_progress),
+item-db-1   | 2025-04-11T17:10:34.791+0000 I STORAGE  [initandlisten] WiredTiger message [1744391434:791910][1:0x7f6676f71a40], txn-recover: Main recovery loop: starting at 1/32384
+item-db-1   | 2025-04-11T17:10:35.134+0000 I STORAGE  [initandlisten] WiredTiger message [1744391435:134096][1:0x7f6676f71a40], txn-recover: Recovering log 1 through 2
+item-db-1   | 2025-04-11T17:10:35.420+0000 I STORAGE  [initandlisten] WiredTiger message [1744391435:420681][1:0x7f6676f71a40], txn-recover: Recovering log 2 through 2
+item-db-1   | 2025-04-11T17:10:35.574+0000 I STORAGE  [initandlisten] WiredTiger message [1744391435:574529][1:0x7f6676f71a40], txn-recover: Set global recovery timestamp: 0
+item-db-1   | 2025-04-11T17:10:35.691+0000 I CONTROL  [initandlisten] 
+item-db-1   | 2025-04-11T17:10:35.691+0000 I CONTROL  [initandlisten] ** WARNING: Access control is not enabled for the database.
+item-db-1   | 2025-04-11T17:10:35.691+0000 I CONTROL  [initandlisten] **          Read and write access to data and configuration is unrestricted.
+item-db-1   | 2025-04-11T17:10:35.691+0000 I CONTROL  [initandlisten] 
+item-db-1   | 2025-04-11T17:10:35.692+0000 I CONTROL  [initandlisten] 
+item-db-1   | 2025-04-11T17:10:35.692+0000 I CONTROL  [initandlisten] ** WARNING: /sys/kernel/mm/transparent_hugepage/enabled is 'always'.
+item-db-1   | 2025-04-11T17:10:35.692+0000 I CONTROL  [initandlisten] **        We suggest setting it to 'never'
+item-db-1   | 2025-04-11T17:10:35.692+0000 I CONTROL  [initandlisten] 
+item-db-1   | 2025-04-11T17:10:35.710+0000 I FTDC     [initandlisten] Initializing full-time diagnostic data capture with directory '/data/db/diagnostic.data'
+item-db-1   | 2025-04-11T17:10:35.712+0000 I NETWORK  [initandlisten] listening via socket bound to 0.0.0.0
+item-db-1   | 2025-04-11T17:10:35.712+0000 I NETWORK  [initandlisten] listening via socket bound to /tmp/mongodb-27017.sock
+item-db-1   | 2025-04-11T17:10:35.712+0000 I NETWORK  [initandlisten] waiting for connections on port 27017
+item-db-1   | 2025-04-11T17:11:25.514+0000 I NETWORK  [listener] connection accepted from 172.20.0.3:51702 #1 (1 connection now open)
+item-db-1   | 2025-04-11T17:11:25.538+0000 I NETWORK  [conn1] received client metadata from 172.20.0.3:51702 conn1: { driver: { name: "nodejs", version: "2.2.36" }, os: { type: "Linux", name: "linux", architecture: "x64", version: "6.10.14-linuxkit" }, platform: "Node.js v14.21.3, LE, mongodb-core: 2.1.20" }
