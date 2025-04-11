@@ -32,7 +32,10 @@ services:
     # Menunggu container database (item-db) siap terlebih dahulu
     # Setelah itu container item-app dijalankan
     depends_on:
-      - item-db 
+      - item-db
+    
+    # Restart container jika terhenti
+    restart: always
 
   # Container service database MongoDB (item-db)
   item-db:
@@ -42,6 +45,9 @@ services:
     # Mapping volume app-db ke /data/db untuk menyimpan data
     volumes:
       - app-db:/data/db
+    
+    # Restart container jika terhenti
+    restart: always
 
 # Mendeklarasikan volume app-db
 volumes:
