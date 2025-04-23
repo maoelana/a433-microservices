@@ -10,6 +10,7 @@ services:
     # Perintah menginstal semua dependensi yang diperlukan aplikasi dalam mode produksi
     # Setelah itu, build aplikasi lalu dijalankan 
     command: sh -c "npm install --production --unsafe-perm && npm run build && npm start"
+    # Karena command ini sudah di eksekusi di Dockerfile, maka tidak perlu dijalankan lagi di Docker Compose
 
     # Mapping port host (80) dengan port container (8080)
     ports:
@@ -17,10 +18,12 @@ services:
 
     # Menetapkan folder /app sebagai folder kerja
     working_dir: /app
+    # Tidak perlu lagi menetapkan working_dir karena sudah terdefinisikan pada Dockerfile
 
     # Bind mount dari folder ./ di host ke folder /app di container
     volumes:
       - ./:/app
+    # Tidak perlu lagi menetapkan volume karena sudah terdefinisikan pada Dockerfile
 
     # Environment variable untuk aplikasi
     # NODE_ENV diatur ke 'production' untuk menjalankan aplikasi dalam mode produksi
@@ -28,6 +31,7 @@ services:
     environment:
       NODE_ENV: production
       DB_HOST: item-db
+    # Tidak perlu lagi menetapkan environment karena sudah terdefinisikan pada Dockerfile
 
     # Menunggu container database (item-db) siap terlebih dahulu
     # Setelah itu container item-app dijalankan
