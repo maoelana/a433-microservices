@@ -35,12 +35,12 @@ jobs:
       - run:
           name: Build Docker Image
           command: |
-            docker build -t ghcr.io/maoelana/a433-microservices/karsajobs:latest .
+            docker build -t ghcr.io/maoelana/a433-microservices/karsajobs:v1 .
       - run:
           name: Push Docker Image to Github Container Registry
           command: |
             echo $PASSWORD_GITHUB_REGISTRY | docker login ghcr.io -u maoelana --password-stdin
-            docker push ghcr.io/maoelana/a433-microservices/karsajobs:latest
+            docker push ghcr.io/maoelana/a433-microservices/karsajobs:v1
 
 workflows:
   version: 2
