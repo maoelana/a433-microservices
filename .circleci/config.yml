@@ -1,54 +1,79 @@
+# Versi konfigurasi CircleCI
 version: 2.1
 
 jobs:
+  # Job pertama, melakukan linting terhadap Dockerfile menggunakan hadolint
   lint-dockerfile:
     docker:
+        # Image hadolint alpine
       - image: hadolint/hadolint:latest-alpine
     steps:
+        # Mengambil (checkout) kode dari repository
       - checkout
       - run:
+          # Nama langkah
           name: Lint Dockerfile
+          # Perintah linting terhadap Dockerfile
           command: hadolint Dockerfile
 
-  test-karsajobs:
+  # Job kedua, digunakan untuk menjalankan unit test pada aplikasi Go
+  test-app:
     docker:
+        # Menggunakan image Go berbasis Alpine
       - image: golang:1.15-alpine
     steps:
+        # Mengambil (checkout) kode dari repository
       - checkout
       - run:
+          # Nama langkah
           name: Install Dependencies
+          # Menginstal dependencies yang diperlukan
           command: |
             apk add --no-cache gcc g++ libgcc
             go mod download
       - run:
+          # Nama langkah
           name: Run Unit Tests
+          # Perintah untuk menjalankan unit test
           command: go test -v -short --count=1 $(go list ./...)
 
-  build-karsajobs:
+  # Job ketiga, digunakan untuk membangun Docker image dan mengunggahnya ke GitHub Container Registry
+  build-app-karsajobs:
     docker:
+        # Menggunakan docker terbaru untuk membuat docker image
       - image: docker:latest
     steps:
+        # Mengambil (checkout) kode dari repository
       - checkout
+        # Remote Docker daemon untuk menjalankan Docker build
       - setup_remote_docker:
+          # Mengaktifkan caching untuk layer Docker
           docker_layer_caching: true
       - run:
+          # Nama langkah
           name: Build Docker Image
+          # Perintah untuk membuat Docker image dengan tag latest
           command: |
-            docker build -t ghcr.io/maoelana/a433-microservices/karsajobs:v1 .
+            docker build -t ghcr.io/maoelana/a433-microservices/karsajobs:latest .
       - run:
+          # Nama langkah
           name: Push Docker Image to Github Container Registry
+          # Login dan Push image yang sudah dibuat ke GitHub Container Registry
           command: |
             echo $PASSWORD_GITHUB_REGISTRY | docker login ghcr.io -u maoelana --password-stdin
-            docker push ghcr.io/maoelana/a433-microservices/karsajobs:v1
+            docker push ghcr.io/maoelana/a433-microservices/karsajobs:latest
 
 workflows:
   version: 2
   build:
     jobs:
+        # Menjalankan job lint-dockerfile terlebih dahulu
       - lint-dockerfile
-      - test-karsajobs:
+      - test-app:
           requires:
+              # Mengatur job test-app dijalankan setelah lint-dockerfile selesai dan sukses
             - lint-dockerfile
-      - build-karsajobs:
+      - build-app-karsajobs:
           requires:
-            - test-karsajobs
+              # Mengatur job build-app-karsajobs dijalankan setelah test-app selesai dan sukses
+            - test-app
