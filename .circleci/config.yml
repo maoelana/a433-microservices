@@ -1,42 +1,43 @@
+# Versi konfigurasi CircleCI
 version: 2.1
 
 jobs:
+  # Job pertama, melakukan linting terhadap Dockerfile menggunakan hadolint
   lint-dockerfile:
     docker:
+        # Image hadolint alpine
       - image: hadolint/hadolint:latest-alpine
     steps:
+        # Mengambil (checkout) kode dari repository          
       - checkout
       - run:
+          # Nama langkah
           name: Lint Dockerfile
+          # Perintah linting terhadap Dockerfile
           command: hadolint Dockerfile
-
-  test-karsajobs:
-    docker:
-      - image: golang:1.15-alpine
-    steps:
-      - checkout
-      - run:
-          name: Install Dependencies
-          command: |
-            apk add --no-cache gcc g++ libgcc
-            go mod download
-      - run:
-          name: Run Unit Tests
-          command: go test -v -short --count=1 $(go list ./...)
-
+  
+  # Job kedua, build (create) dan push docker image
   build-app-karsajobs-ui:
     docker:
+        # Menggunakan docker terbaru untuk membuat docker image
       - image: docker:latest
     steps:
+        # Mengambil (checkout) kode dari repository
       - checkout
+        # Remote Docker daemon untuk menjalankan Docker build
       - setup_remote_docker:
+          # Mengaktifkan caching untuk layer Docker
           docker_layer_caching: true
       - run:
+          # Nama langkah
           name: Build Docker Image
+          # Perintah untuk membuat Docker image
           command: |
             docker build -t ghcr.io/maoelana/a433-microservices/karsajobs-ui:v1 .
       - run:
+          # Nama langkah
           name: Push Docker Image to Github Container Registry
+          # Login dan Push image yang sudah dibuat ke GitHub Container Registry
           command: |
             echo $PASSWORD_GITHUB_REGISTRY | docker login ghcr.io -u maoelana --password-stdin
             docker push ghcr.io/maoelana/a433-microservices/karsajobs-ui:v1
@@ -45,7 +46,9 @@ workflows:
   version: 2
   build:
     jobs:
+        # Menjalankan job lint-dockerfile terlebih dahulu
       - lint-dockerfile
       - build-app-karsajobs-ui:
           requires:
+              # Mengatur job build-app-karsajobs-ui dijalankan setelah lint-dockerfile selesai dan sukses
             - lint-dockerfile
