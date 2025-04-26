@@ -1,0 +1,54 @@
+version: 2.1
+
+jobs:
+  lint-dockerfile:
+    docker:
+      - image: hadolint/hadolint:latest
+    steps:
+      - checkout
+      - run:
+          name: Lint Dockerfile
+          command: hadolint Dockerfile
+
+  test-karsajobs:
+    docker:
+      - image: golang:1.15-alpine
+    steps:
+      - checkout
+      - run:
+          name: Install Dependencies
+          command: |
+            go mod download
+      - run:
+          name: Run Unit Tests
+          command: go test -v -short --count=1 $(go list ./...)
+
+  build-karsajobs:
+    docker:
+      - image: docker:latest
+    steps:
+      - checkout
+      - setup_remote_docker:
+          version: 20.10.7
+          docker_layer_caching: true
+      - run:
+          name: Build Docker Image
+          command: |
+            docker build -t ghcr.io/maoelana/a433-microservices/karsajobs:latest .
+      - run:
+          name: Push Docker Image to Github Container Registry
+          command: |
+            echo $PASSWORD_GITHUB_REGISTRY | docker login ghcr.io -u maoelana --password-stdin
+            docker push ghcr.io/maoelana/a433-microservices/karsajobs:latest
+
+workflows:
+  version: 2
+  build:
+    jobs:
+      - lint-dockerfile
+      - test-karsajobs:
+          requires:
+            - lint-dockerfile
+      - build-karsajobs:
+          requires:
+            - test-karsajobs
