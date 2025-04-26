@@ -10,6 +10,20 @@ jobs:
           name: Lint Dockerfile
           command: hadolint Dockerfile
 
+  test-karsajobs:
+    docker:
+      - image: golang:1.15-alpine
+    steps:
+      - checkout
+      - run:
+          name: Install Dependencies
+          command: |
+            apk add --no-cache gcc g++ libgcc
+            go mod download
+      - run:
+          name: Run Unit Tests
+          command: go test -v -short --count=1 $(go list ./...)
+
   build-app-karsajobs-ui:
     docker:
       - image: docker:latest
@@ -32,9 +46,6 @@ workflows:
   build:
     jobs:
       - lint-dockerfile
-      - test-karsajobs:
+      - build-app-karsajobs-ui:
           requires:
             - lint-dockerfile
-      - build-karsajobs:
-          requires:
-            - test-karsajobs
