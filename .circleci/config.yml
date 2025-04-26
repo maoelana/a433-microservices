@@ -1,0 +1,40 @@
+version: 2.1
+
+jobs:
+  lint-dockerfile:
+    docker:
+      - image: hadolint/hadolint:latest-alpine
+    steps:
+      - checkout
+      - run:
+          name: Lint Dockerfile
+          command: hadolint Dockerfile
+
+  build-app-karsajobs-ui:
+    docker:
+      - image: docker:latest
+    steps:
+      - checkout
+      - setup_remote_docker:
+          docker_layer_caching: true
+      - run:
+          name: Build Docker Image
+          command: |
+            docker build -t ghcr.io/maoelana/a433-microservices/karsajobs-ui:v1 .
+      - run:
+          name: Push Docker Image to Github Container Registry
+          command: |
+            echo $PASSWORD_GITHUB_REGISTRY | docker login ghcr.io -u maoelana --password-stdin
+            docker push ghcr.io/maoelana/a433-microservices/karsajobs-ui:v1
+
+workflows:
+  version: 2
+  build:
+    jobs:
+      - lint-dockerfile
+      - test-karsajobs:
+          requires:
+            - lint-dockerfile
+      - build-karsajobs:
+          requires:
+            - test-karsajobs
