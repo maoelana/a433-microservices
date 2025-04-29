@@ -1,0 +1,38 @@
+# Versi API untuk Deployment
+apiVersion: apps/v1
+# Jenis resource yang dibuat
+kind: Deployment
+metadata:
+  # Nama deployment ini
+  name: karsajobs-ui
+spec:
+  # Jumlah pod yang dijalankan, 1 replika
+  replicas: 1
+  selector:
+    matchLabels:
+      # Selector untuk memilih pod dengan label 'app=karsajobs-ui'
+      app: karsajobs-ui
+  template:
+    metadata:
+      labels:
+        # Label yang diberikan pada pod, 
+        # untuk pengelompokan dan pemilihan
+        app: karsajobs-ui
+    spec:
+      containers:
+          # Nama container yang ada di dalam pod
+        - name: karsajobs-ui
+          # Image Docker yang digunakan
+          image: ghcr.io/maoelana/a433-microservices/karsajobs-ui:latest
+          ports:
+              # Port yang digunakan di dalam container
+              # Port ini akan di-mapping ke port di node (host)
+            - containerPort: 8000
+          # Menyediakan environment variable untuk container
+          env:
+              # Nama environment variable 'VUE_APP_BACKEND',
+              # digunakan untuk mengkonfigurasi backend API yang akan diakses oleh frontend
+            - name: VUE_APP_BACKEND
+              # Nilai environment variable 'VUE_APP_BACKEND',
+              # nilainya, URL untuk backend API yang merujuk Service backend (karsajbos-service.yml)
+              value: "http://192.168.39.252:30008"

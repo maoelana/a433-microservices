@@ -1,0 +1,73 @@
+# Versi API untuk StatefulSet
+apiVersion: apps/v1
+# Jenis resource yang dibuat
+kind: StatefulSet
+metadata:
+  # Nama StatefulSet ini
+  name: mongodb
+spec:
+  selector:
+    matchLabels:
+      # Selector ini memastikan StatefulSet akan mengelola pod yang memiliki label 'app=mongodb'
+      app: mongodb
+  # Nama service yang digunakan untuk mengakses pod-pod MongoDB dalam StatefulSet ini
+  serviceName: mongodb
+  # Jumlah pod yang dijalankan, 1 replika
+  replicas: 1
+  # Waktu minimal pod harus dalam keadaan "ready"
+  minReadySeconds: 10
+  template:
+    metadata:
+      labels:
+        # Label yang digunakan pada template pod,
+        # untuk memastikan pod memiliki label yang sesuai dengan selector
+        app: mongodb
+    spec:
+      # Durasi untuk proses shutdown
+      terminationGracePeriodSeconds: 10
+      containers:
+          # Image Docker yang digunakan
+        - image: mongo:4.4
+          # Nama container di dalam pod
+          name: mongodb
+          env:
+              # Environment variabel file yang berisi username MongoDB
+            - name: MONGO_INITDB_ROOT_USERNAME_FILE
+              # Path ke file yang berisi username MongoDB (dari Secret)
+              value: /etc/mongo-credentials/MONGO_ROOT_USERNAME
+              # Environment variabel file yang berisi password MongoDB
+            - name: MONGO_INITDB_ROOT_PASSWORD_FILE
+              # Path ke file yang berisi password MongoDB (dari Secret)
+              value: /etc/mongo-credentials/MONGO_ROOT_PASSWORD
+          ports:
+              # Port yang digunakan oleh container MongoDB,
+              # untuk menerima koneksi (port default MongoDB)
+            - containerPort: 27017
+              # Nama port ini
+              name: mongodb
+          volumeMounts:
+              # Menggunakan volume untuk menyimpan data MongoDB,
+              # pada path /data/db di container
+            - name: mongo-data
+              mountPath: /data/db
+              # Mount konfigurasi MongoDB (dari ConfigMap),
+              # ke path /config di container
+            - name: mongo-config
+              mountPath: /config
+              # Mount Secret (username dan password),
+              # ke path /etc/mongo-credentials
+            - name: mongo-credentials
+              mountPath: /etc/mongo-credentials
+      volumes:
+        - name: mongo-data
+          persistentVolumeClaim:
+            # Menggunakan PersistentVolumeClaim untuk volume data MongoDB
+            claimName: mongo-pv-claim
+        - name: mongo-config
+          configMap:
+            # Menggunakan ConfigMap yang berisi konfigurasi MongoDB
+            name: mongo-config
+        - name: mongo-credentials
+          secret:
+            # Menggunakan Secret untuk menyimpan kredensial MongoDB (username dan password)
+            secretName: mongo-secret

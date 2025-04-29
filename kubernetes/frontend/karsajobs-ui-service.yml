@@ -1,0 +1,19 @@
+# Versi API untuk Service
+apiVersion: v1
+# Jenis resource yang dibuat
+kind: Service
+metadata:
+  # Nama dari service ini
+  name: karsajobs-ui
+spec:
+  ports:
+    # Port yang digunakan service untuk berkomunikasi dengan container
+  - port: 8000
+    # Port yang dibuka pada setiap node dalam cluster,
+    # digunakan untuk mengakses aplikasi dari luar cluster
+    nodePort: 30007
+  selector:
+    # Selector untuk memilih pod dengan label 'app=karsajobs-ui'
+    app: karsajobs-ui
+  # Tipe service yang digunakan
+  type: NodePort

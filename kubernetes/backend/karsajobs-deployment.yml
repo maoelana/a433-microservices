@@ -1,0 +1,58 @@
+# Versi API untuk Deployment
+apiVersion: apps/v1
+# Jenis resource yang dibuat
+kind: Deployment
+metadata:
+  # Nama deployment ini
+  name: karsajobs
+spec:
+  # Jumlah pod yang dijalankan, 1 replika
+  replicas: 1
+  selector:
+    matchLabels:
+      # Selector untuk memilih pod dengan label 'app=karsajobs'
+      app: karsajobs
+  template:
+    metadata:
+      labels:
+        # Label yang diberikan pada pod, 
+        # untuk pengelompokan dan pemilihan 
+        app: karsajobs
+    spec:
+      containers:
+          # Nama container yang ada di dalam pod
+        - name: karsajobs
+          # Image Docker yang digunakan
+          image: ghcr.io/maoelana/a433-microservices/karsajobs:latest
+          ports:
+              # Port yang digunakan di dalam container
+              # Port ini akan di-mapping ke port di node (host)
+            - containerPort: 8080
+          # Menyediakan environment variable untuk container
+          env:
+              # Nama environment variable 'APP_PORT'
+            - name: APP_PORT
+              # Nilai environment variable 'APP_PORT'
+              value: "8080"
+              # Nama environment variable 'MONGO_HOST'
+            - name: MONGO_HOST
+              # Nilai environment variable 'MONGO_HOST'
+              value: "mongodb"
+              # Mengambil user MongoDB dari Secret
+              # Nama environment variable 'MONGO_USER'
+            - name: MONGO_USER
+              valueFrom:
+                secretKeyRef:
+                  # Nama secret yang digunakan
+                  name: mongo-secret
+                  # Key dalam Secret yang digunakan untuk mengambil nilai username MongoDB
+                  key: MONGO_ROOT_USERNAME
+              # Mengambil password MongoDB dari Secret
+              # Nama environment variable 'MONGO_PASS'
+            - name: MONGO_PASS
+              valueFrom:
+                secretKeyRef:
+                  # Nama secret yang digunakan
+                  name: mongo-secret
+                  # Key dalam secret yang digunakan untuk mengambil nilai password MongoDB
+                  key: MONGO_ROOT_PASSWORD

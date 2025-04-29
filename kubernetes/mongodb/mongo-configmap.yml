@@ -1,0 +1,16 @@
+# Versi API untuk ConfigMap
+apiVersion: v1
+# Jenis resource yang dibuat
+kind: ConfigMap
+metadata:
+  # Nama ConfigMap ini
+  name: mongo-config
+# Bagian data yang akan dimasukkan ke ConfigMap
+data:
+  # File konfigurasi untuk MongoDB dalam bentuk file bernama "mongo.conf",
+  # Tanda "|" menunjukkan multiline string
+  mongo.conf: |
+    # Bagian ini adalah konfigurasi penyimpanan database MongoDB
+    storage:
+      # Mengatur lokasi direktori penyimpanan data MongoDB
+      dbPath: /data/db

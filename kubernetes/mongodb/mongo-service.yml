@@ -1,0 +1,21 @@
+# Versi API untuk Service
+apiVersion: v1
+# Jenis resource yang dibuat
+kind: Service
+metadata:
+  # Nama dari service ini
+  name: mongodb
+spec:
+  ports:
+    # Port yang akan digunakan oleh service untuk mengakses aplikasi MongoDB
+    # Port ini adalah port default MongoDB
+  - port: 27017
+    # Protokol yang digunakan oleh port ini
+    protocol: TCP 
+    # Nama port ini
+    name: mongodb
+  selector:
+    # Selector untuk memilih pod dengan label 'app=mongodb'
+    app: mongodb
+  # Tipe service yang digunakan
+  type: ClusterIP

@@ -1,0 +1,3 @@
+Github Packages:
+1. karsajobs: https://github.com/users/maoelana/packages/container/package/a433-microservices%2Fkarsajobs
+2. karsajobs-ui: https://github.com/users/maoelana/packages/container/package/a433-microservices%2Fkarsajobs-ui

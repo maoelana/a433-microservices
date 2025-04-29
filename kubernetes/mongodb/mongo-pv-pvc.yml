@@ -1,0 +1,44 @@
+# Versi API untuk PersistentVolume
+apiVersion: v1
+# Jenis resource yang dibuat
+kind: PersistentVolume
+metadata:
+  # Nama PersistentVolume ini
+  name: mongo-pv-volume
+  labels:
+    # Label untuk menandai jenis volume sebagai 'local'
+    type: local
+spec:
+  # Menentukan kelas penyimpanan (StorageClass) sebagai 'manual'
+  storageClassName: manual
+  capacity:
+    # Kapasitas volume
+    storage: 10Gi
+  accessModes:
+      # Mode akses volume,
+      # yaitu bisa dibaca dan ditulis hanya oleh satu pod pada satu waktu
+    - ReadWriteOnce
+  hostPath:
+    # Lokasi path di host
+    path: "/mnt/data"
+
+# batas untuk file baru
+---
+
+# Versi API untuk PersistentVolumeClaim
+apiVersion: v1
+# Jenis resource yang dibuat
+kind: PersistentVolumeClaim
+metadata:
+  # Nama PersistentVolumeClaim ini
+  name: mongo-pv-claim
+spec:
+  # Meminta PersistentVolume dengan StorageClass 'manual' yang sudah didefinisikan di PV
+  storageClassName: manual
+  accessModes:
+      # Meminta akses untuk ReadWriteOnce
+    - ReadWriteOnce
+  resources:
+    requests:
+      # Permintaan kapasitas penyimpanan volume adalah 10Gi
+      storage: 10Gi
